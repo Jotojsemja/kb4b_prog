@@ -21,6 +21,7 @@ Hrát znovu [a/n]: n
 ---
 
 ### 2. Hod kostkou
+
 - Vytvoř program, který vygeneruje hod kostkou (číslo 1–6).  
 - Přidej možnost zvolit si **počet kostek**, které se hodí, a vypiš součet.  
 - Přidej možnost zvolit si **počet stran kostek** (např. 20).  
