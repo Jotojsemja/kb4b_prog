@@ -2,6 +2,7 @@ import os
 tento_rok = 25
 def cleaner():
     os.system('cls')
+ 
     
 def vypsani_del():
     vysledky = []
@@ -10,6 +11,7 @@ def vypsani_del():
         if cislo % i == 0:
             vysledky.append(i)
     print(vysledky)
+
     
 def schody():
     pocet = int(input("Zadej delku schodů:"))
@@ -17,7 +19,8 @@ def schody():
     
     for i in range(pocet):
         print(i * znak)
-    
+
+   
 def validator_rod_cisla():
     while (True):
         rodne = input("Zadej svoje rodné číslo, určitě si to neuložím: \n >" )
@@ -39,10 +42,9 @@ def validator_rod_cisla():
         pohlavi = "žena" 
     else:
         pohlavi = "muž"
-    # den 
     
-
     print(f"{den}.{mesic}.{rok_spravne} {pohlavi}")
+
 
 def validator_vstupu():
     while(True):
@@ -52,15 +54,18 @@ def validator_vstupu():
         else:
             break
 
-#def vymazani_duplicit(pole):
-#    neduplikat = []
-#    for i in pole:
-#            if i == j:
-#                neduplikat.append(i)
+
+def vymazani_duplicit(pole):
+    neduplikat = []
+    for i in pole:
+        if not(i in neduplikat):
+            neduplikat.append(i)
+    print(neduplikat)
+  
       
 cleaner()
 #vypsani_del()
 #schody()
 #validator_rod_cisla()
-validator_vstupu()
-
+# validator_vstupu()
+vymazani_duplicit([1,15,156,185,4,4,4,4,9,15])
