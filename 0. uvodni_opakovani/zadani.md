@@ -20,6 +20,7 @@ Např.
 
 ### Vykreslení schodů
 
+<<<<<<< HEAD
 Načti číslo udávající výšku a znak. Následně z tohoto znaku vykresli schody o dané výšce.
 
 Např.
@@ -31,6 +32,16 @@ Např.
   hhh
   hhhh
   hhhhh
+=======
+ Např.
+ - vstup: 5 "h"
+ - výstup:<br>
+    h<br>
+    hh<br>
+    hhh<br>
+    hhhh<br>
+    hhhhh
+>>>>>>> 12ce452636c5edade0d305692737ca76b4a843d1
 
 ### Validátor rodného čísla:
 
