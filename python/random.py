@@ -13,18 +13,20 @@ def two_choices():
     return random.randint(0,1)
     
 
-def coin_toss(money):
+def coin_toss():
+    global money
     print("Zůstatek: ",money)
-    bet = input("Tvá sázka?\n>")
+    bet = input("Tvá sázka? \n>")
     if not(bet.isdigit()) or int(bet) > money:
         print("Něco se pokazilo!")
         return money
     bet = int(bet)
+    money -= bet
     
     your_choice = input("Tvoje volba ""panna"" nebo ""orel""? \n>")
     if not(your_choice == "panna" or your_choice == "orel"):
         print("Něco se pokazilo!")
-        return money
+        money += bet
     
     if two_choices():
         toss = "orel"
@@ -40,19 +42,6 @@ def coin_toss(money):
         print("Vyhrál jsi!!!!", bet * 2)
     else:
         print("Prohrál jsi. Zkus to znovu.")
-        money -= bet
-    return money
-
-
-def gamble_toss(money):
-    while (money > 0):
-        money = coin_toss(money)
-        if money is None:
-            break
-    time.sleep(2)
-    cleaner()
-    print("Chcípneš na bídu bídníku.")
-
 
     
 class Black_jack:
@@ -102,7 +91,7 @@ class Black_jack:
         
     def moves(self):
         while(not(self.lost)):
-            move = input("Jaký je tvůj další krok? [stand][hit][double down]\n>")
+            move = input("Jaký je tvůj další krok? [stand][hit][double down]\n>") 
             print()
             if (move == "stand"):
                 break
@@ -110,8 +99,14 @@ class Black_jack:
                 self.draw_card()
                 self.show_cards()
                 self.boom()
-            else:
-                print("Špatný vstup! Zadejte buď: [stand] nebo [hit]")
+            elif(move == "double down"):
+                self.draw_card()
+                self.show_cards()
+                self.boom()
+                break
+            else:    
+                print("Špatný vstup! Zadejte buď: [stand], [hit] nebo  [double down]")
+        time.sleep(2)
         
     def results(self):
         if self.value == 21 and len(self.cards) == 2:
@@ -121,88 +116,112 @@ class Black_jack:
             return self.value
         
 def dealer_ai():
-    while(dealer.value < 17 or dealer.aces == 1):
+    while(dealer.value < 17): # 
         dealer.draw_card()
+        dealer.boom()
     dealer.show_cards()
     dealer.values()
 
 
 def game_of_blackjack():
-    print("Tvůj zůstatek: ", player.money)
-    while(player.bet < min_bet or player.bet > player.money):
-        player.bet = input("Zadej svou sázku: \nmin sázka je 20. \n>")
-        if player.bet.isnumeric():
-            player.bet = int(player.bet)
-        else:
-            player.bet = 0 # špatný input
-    print("Tvá sázka je ", player.bet)
-    time.sleep(1)
-    cleaner()
-    
-    dealer.draw_card()
-    dealer.show_cards()
-    dealer.draw_card()
-     
-    player.draw_card()
-    player.draw_card()
-    player.show_cards()
-    player.moves()
-    time.sleep(2) 
-    
-    dealer_ai()
-    dealer.boom()
-    time.sleep(2)
-    
-    # vyhodnocení hry
-    dealer_points = dealer.results()
-    player_points = player.results()
-    print()
-    print(f"{player_points} pro {player.addressing}")
-    print(f"{dealer_points} pro {dealer.addressing}")
-    
-    if player.lost:
-        print("Dům vyhrává")
-        print("Štěstina se někdy neusmívá")
-        # dům bere
-        player.money -= player.bet
+    play_again = True
+    player.bet = 0
+    while(play_again):
+        global money, deck, def_deck
+        player.money = money
+        print("Tvůj zůstatek: ", player.money)
+        while(player.bet < min_bet or player.bet > player.money):
+            player.bet = input(f"Zadej svou sázku: \nMin sázka je {min_bet}.\nPro odejijí od stolu zadejte: [leave]\n>")
+            if player.bet.isnumeric():
+                player.bet = int(player.bet)
+            elif player.bet == "leave":
+                play_again = False
+                break
+            else:    
+                player.bet = 0 # špatný input
+        if not(play_again):
+            break       
+            
+            
+        print("Tvá sázka je ", player.bet)
+        time.sleep(1)
+        cleaner()
+        # první tah
+        dealer.draw_card()
+        dealer.show_cards()
+        dealer.draw_card()
         
-    elif (dealer_points == player_points):
-        print("Nikdo nevyhrává", player_points,"vs", dealer_points)
-        # prosím vrať sázky!!
-        print("Tvůj zůstatek je: ", player.money)
+        player.draw_card()
+        player.draw_card()
+        player.show_cards()
+        # další tahy
+        player.moves()
         
-    elif player_points == -1:
-        print("Právě si vyhrál")
-        print("Kámo máš Blackjack co bys čekal?")
-        # hráč bere + 250%
-        player.money += player.bet * 1.5
-        print("Tvůj zůstatek je: ", player.money)
+        dealer_ai()
+        dealer.boom()
+        time.sleep(2)
         
-    elif dealer_points == -1:
-        print("Dům vyhrává")
-        print("Dům má Blackjack")
-        # Dům bere
-        player.money -= player.bet
+        # vyhodnocení hry
+        dealer_points = dealer.results()
+        player_points = player.results()
+        print()
+        print(f"{player_points} pro {player.addressing}")
+        print(f"{dealer_points} pro {dealer.addressing}")
+        
+        if player.lost:
+            print("Dům vyhrává")
+            print("Štěstina se někdy neusmívá")
+            # dům bere
+            player.money -= player.bet
+            
+        elif (dealer_points == player_points):
+            print("Nikdo nevyhrává", player_points,"vs", dealer_points)
+            # prosím vrať sázky!!
+            print("Tvůj zůstatek je: ", player.money)
+            
+        elif player_points == -1:
+            print("Právě si vyhrál")
+            print("Kámo máš Blackjack co bys čekal?")
+            # hráč bere + 250%
+            player.money += player.bet * 1.5
+            print("Tvůj zůstatek je: ", player.money)
+            
+        elif dealer_points == -1:
+            print("Dům vyhrává")
+            print("Dům má Blackjack")
+            # Dům bere
+            player.money -= player.bet
 
-    elif dealer.lost:
-        print("Právě si vyhrál")
-        print("Očividně jsi v této hře lepší")
-        # hráč bere + 100%
-        player.money += player.bet
-        print("Tvůj zůstatek je: ", player.money)
-                
-    elif dealer_points > player_points:
-        print("Dům vyhrává")
-        print("Někdy štěstina nepřeje")
-        # dům bere
-        player.money -= player.bet
-    else:
-        print("Právě si vyhrál")
-        # hráč bere + 100%
-        player.money += player.bet
-        print("Tvůj zůstatek je: ", player.money)
+        elif dealer.lost:
+            print("Právě si vyhrál")
+            print("Očividně jsi v této hře lepší")
+            # hráč bere + 100%
+            player.money += player.bet
+            print("Tvůj zůstatek je: ", player.money)
+                    
+        elif dealer_points > player_points:
+            print("Dům vyhrává")
+            print("Někdy štěstina nepřeje")
+            # dům bere
+            player.money -= player.bet
+        else:
+            print("Právě si vyhrál")
+            # hráč bere + 100%
+            player.money += player.bet
+            print("Tvůj zůstatek je: ", player.money)
         
-    return 
+        player.bet = 0   
+        player.cards = []
+        player.lost = False
+        
+        dealer.lost = False
+        dealer.cards = []
+        deck = def_deck.copy() 
+        money = player.money
+
+        time.sleep(2)
+        print()
+
 #-----------------------------------------------------      
 # Katy!!!!!!!!!!!!! ai
 values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
@@ -214,8 +233,17 @@ player = Black_jack("hráče", money)
 dealer = Black_jack("dealera", 0)
 # -------------------------------------------------------------------------------------------------------------------------------
 cleaner()
-game_of_blackjack()
-
+while(money > 0):
+    game = input("Jakou hru budete chtít hrát? [blackjack] [toss]\n>")
+    match(game):
+        case("blackjack"):
+            if min_bet <= money:
+                cleaner()
+                game_of_blackjack()
+        case("toss"):
+            cleaner()
+            coin_toss() 
+    time.sleep(2)
+time.sleep(2)
 cleaner()
-gamble_toss(money) 
-
+print("Chcípneš na bídu bídníku.")
