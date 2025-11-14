@@ -34,7 +34,7 @@ Koupit psa je jediný způsob, jak získat za peníze lásku.
 ## 3) **Výběr studentů** 
 Načti soubor *studenti.txt* (1 řádek = 1 student). 
 
-Vytvoř funkci, která na vstupu dostane název souboru a 1 číslo *n*. Program následně vypíše *n* náhodně ybraných unikátních jmen ze souboru.
+Vytvoř funkci, která na vstupu dostane název souboru a 1 číslo *n*. Program následně vypíše *n* náhodně vybraných unikátních jmen ze souboru.
 
 Dej si pozor, aby se vypsaná jména naopakovala.
 
