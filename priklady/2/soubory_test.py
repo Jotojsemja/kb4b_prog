@@ -36,7 +36,7 @@ def vyber_studenta(cesta, n):
     studenti.sort()
     return(studenti)
     
-studenti = vyber_studenta(cesta, 22)
+studenti = vyber_studenta(cesta, 5)
 print(*[student for student in studenti], sep="")
 
 vystupni_soubor = "kb4b_prog/2. prace_se_soubory/data/vystupni.txt"
