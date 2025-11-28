@@ -59,7 +59,7 @@ def log_in(cesta):
                 
             
 def game_room(cesta):
-    cesta += "uziv_databaze.txt"
+    cesta += "uziv_databaz;e.txt"
     log_in(cesta)
     create_account(cesta)
     
