@@ -5,6 +5,7 @@ import os
 import time
 
 cesta = "kb4b_prog/2. prace_se_soubory/data/"
+
 def cleaner():
     os.system('cls')
 
