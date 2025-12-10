@@ -172,8 +172,7 @@ def game(questions):
         print(f"{i+1}. otázka.")
         print(f"Úroveň složitosti: {level_names[level]}")
         print(questions[level][question_number][0])
-        
-        input("True or False")
+        input("[True / False]")
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 cleaner()
 #+++++++++++++++
