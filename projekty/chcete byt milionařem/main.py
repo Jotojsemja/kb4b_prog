@@ -4,8 +4,7 @@ import csv
 import random as r
 import os 
 import time
-false = False
-true = True
+
 path = "projekty/chcete byt milionařem/"
 skull_art = r"""
                    .-.
@@ -13,6 +12,7 @@ skull_art = r"""
                 '=.|m|.='
                 .='`"``=. 
     """
+    
 def cleaner():
     os.system('cls')
       
@@ -29,10 +29,10 @@ def register(path):
     with open(path, "r",encoding="utf-8") as file:
         lines = file.read()
         if user_name in lines:
-            return None, false
+            return None, False
     with open(path, "a",encoding="utf-8") as file:
         file.write(f"\n{user_name},{user_password}")
-        return user_name, true
+        return user_name, True
  
         
 def login(path):
@@ -41,16 +41,16 @@ def login(path):
     with open(path, "r", encoding="utf-8") as file:
         print("Přihlasení do účtu")
         lines = csv.DictReader(file)
-        login_successful = false
+        login_successful = False
         user_name = input("Zadej jméno: \n>")
         user_password = input("Zadej heslo: \n>") 
     
         for line in lines:
             if not(login_successful):
                 if line["login"] == user_name and line["password"] == user_password:
-                    login_successful = true
+                    login_successful = True
                 else:
-                    login_successful = false
+                    login_successful = False
             
     return user_name, login_successful
 
@@ -172,7 +172,21 @@ def game(questions):
         print(f"{i+1}. otázka.")
         print(f"Úroveň složitosti: {level_names[level]}")
         print(questions[level][question_number][0])
-        input("[True / False]")
+        
+        while(True): # cyklus jestli uživatel zadává správné vstupy
+            print(questions[level][question_number][0])
+            answer = input("[True / False] [Pravda / Nepravda]")
+            # kontroluji jen první písmenka kvůli upsání
+            if answer[0].lower() in ("t", "p"):
+                answer = True
+                break
+            elif answer[0].lower() in ("f", "n"):
+                answer = False
+                break
+            else: 
+                continue
+            
+        
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 cleaner()
 #+++++++++++++++
