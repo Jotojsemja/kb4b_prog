@@ -91,23 +91,57 @@ def lobby(path, user_name):
     question_diff_counts, question_category_count, questions = content_of_questions(path)
     cleaner()
     while(1):
-        print(f"Co chceš dělat {user_name}?")
-        print("1. Hrát hru. [h]")
-        print("2. Zobrazil statistiky otázek. [s]")
-        print("3. Vypsat minulé výtěze. [v]")
-        print("4. Pravidla a průběh hry. [p]")
-        print("4. Odejít / Odhlásit se.[o]")
-        choice = str(input("\n>"))
-        if choice in ("h", "s", "v", "p", "o"):
-            break
-        
-    match(choice):
-        case("h"):
-            game(questions)
-        case("s"):
-            graph_menu(question_diff_counts, question_category_count)
+        while(1):
+            print(f"Co chceš dělat {user_name}?")
+            print("1. Hrát hru. [h]")
+            print("2. Zobrazil statistiky otázek. [s]")
+            print("3. Vypsat minulé výtěze. [v]")
+            print("4. Pravidla a průběh hry. [p]")
+            print("5. Odejít / Odhlásit se.[o]")
+            choice = str(input("\n>"))
+            if choice in ("h", "s", "v", "p", "o"):
+                break
             
+        match(choice):
+            case("h"):
+                path += "winners.txt"
+                winning = game(questions)
+                if winning:
+                    print("Výhrál jsi gratulace!")
+                    with open(path,"a", encoding="utf-8") as file:
+                        file.write(f"user_name\n")
+                else:
+                    print("Dnes se to nějak nepovedlo. Děkuji za účast!")
+                    
+            case("s"):
+                graph_menu(question_diff_counts, question_category_count)
+                
+            case("v"):
+                path += "winners.txt"
+                with open(path,"r", encoding="utf-8") as file:
+                    lines = file.read()
+                    print("Seznam výtězů:\n")
+                    for line in lines:
+                        print(line)
+            case("p"):
+                print("Pravidla hry")
+                print("-----------------------------------------")
+                print("Hra má vždy 15 úrovní (otázek). Obtížnosti jsou pevně dané:")
+                print("• úroveň 1-5: easy,")
+                print("• úroveň 6-10: medium,")
+                print("• úroveň 11-15: hard.")
+                print("Pro každou úroveň:")
+                print("1. je náhodně vybrána otázka z příslušné obtížnosti,")
+                print("2. hráč odpovídá True nebo False.")
+                print("Hra končí:")
+                print("• pokud hráč odpoví špatně,")
+                print("• nebo pokud správně zodpoví všechny 15 otázek. V tomto případě je uživatelům")
+                print("login (s možnou zprávou) uložen do souboru všech vítězů.")
+                print("-----------------------------------------")
+                time.sleep(10)
             
+            case("o"):
+                break
 # grafy
 # ----------------------
 def graph_menu(question_diff_counts, question_category_count):
@@ -162,8 +196,10 @@ def graph(question_counts):
 def game(questions):
     level = 0
     level_names = ["lehká","základní","náročná"]
+    winning = True
     
-    for i in range(0, 15):
+    cleaner()
+    for i in range(0, 2):
         if i % 5 == 0 and i != 0: # každých  lvl se mění obtížnost
             level += 1
             print("Úroveň se zvyšuje!")
@@ -178,30 +214,39 @@ def game(questions):
             print(questions[level][question_number][0], questions[level][question_number][1])
             answer = input("[True / False] [Pravda / Nepravda]\n>")
             # kontroluji jen první písmenka kvůli upsání
-            if answer[0].lower() in ("t", "p"):
-                answer = True
-                break
-            elif answer[0].lower() in ("f", "n"):
-                answer = False
-                break
-            else: 
-                continue
-        
-        if answer is questions[level][question_number][1]:
+            if answer:
+                if answer[0].lower() in ("t", "p"):
+                    answer = True
+                    break
+                elif answer[0].lower() in ("f", "n"):
+                    answer = False
+                    break
+                else:
+                    continue
+    
+        if answer is not questions[level][question_number][1]: 
             print("Někde se někdo asi uklikl protože ty chyby neděláš!")
-            time.sleep(4)
+            loading(5)
             print("Ještě to zkontroluji.")
-            time.sleep(4)
+            loading(9)
             print("Nebyl to omyl reálně jsi odpověděl špatně.")
+            print(skull_art)
+            loading(20)
+            winning = False
             break
+        
         cleaner()
-        loading(9)
+        loading(1)
         cleaner()
+        
+    return winning
+        
+    
 
 def loading(wait):
     for i in range(wait):
         print(".", end="")
-        time.sleep(0.2)
+        time.sleep(0.2 * wait/9)
         print("..", end=".")
     print()
     
@@ -211,18 +256,28 @@ def loading(wait):
 cleaner()
 #+++++++++++++++
 # first_menu(path)    
-# lobby(path, "teo")
+lobby(path, "teo")
 #+++++++++++++
 
 
 #+++++++++++++++++
 # graph_menu(path)
-test, test1, test2 = content_of_questions(path)
+
+# test, test1, test2 = content_of_questions(path)
 
 # print(test)
 # print(test1)
 # print(test2[0][0][0])
 
-game(test2)
+# game(test2)
 
-    
+# answer = ""
+# valid_answers = {"f", "F", "t", "T", "p", "P", "n", "N"}
+# while(not(answer in valid_answers)): # cyklus jestli uživatel zadává správné vstupy
+#         print(valid_answers)
+#         answer = input("[True / False] [Pravda / Nepravda]\n>")
+#         # kontroluji jen první písmenka kvůli upsání
+#         if answer[0].lower() in ("t", "p"):
+#             answer = True
+#         elif answer[0].lower() in ("f", "n"):
+#             answer = False
