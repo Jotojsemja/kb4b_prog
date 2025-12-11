@@ -5,7 +5,7 @@ import random as r
 import os 
 import time
 
-path = "projekty/chcete byt milionařem/"
+path = "kb4b_prog\projekty\chcete byt milionařem/"
 skull_art = r"""
                    .-.
                   (0.0)
@@ -164,18 +164,19 @@ def game(questions):
     level_names = ["lehká","základní","náročná"]
     
     for i in range(0, 15):
-        if i % 5 == 0: # každých  lvl se mění obtížnost
+        if i % 5 == 0 and i != 0: # každých  lvl se mění obtížnost
             level += 1
+            print("Úroveň se zvyšuje!")
+            loading(15)
         question_number = r.randint(0,len(questions[level]))
     
     #forntend
         print(f"{i+1}. otázka.")
         print(f"Úroveň složitosti: {level_names[level]}")
-        print(questions[level][question_number][0])
         
         while(True): # cyklus jestli uživatel zadává správné vstupy
-            print(questions[level][question_number][0])
-            answer = input("[True / False] [Pravda / Nepravda]")
+            print(questions[level][question_number][0], questions[level][question_number][1])
+            answer = input("[True / False] [Pravda / Nepravda]\n>")
             # kontroluji jen první písmenka kvůli upsání
             if answer[0].lower() in ("t", "p"):
                 answer = True
@@ -185,8 +186,27 @@ def game(questions):
                 break
             else: 
                 continue
-            
         
+        if answer is questions[level][question_number][1]:
+            print("Někde se někdo asi uklikl protože ty chyby neděláš!")
+            time.sleep(4)
+            print("Ještě to zkontroluji.")
+            time.sleep(4)
+            print("Nebyl to omyl reálně jsi odpověděl špatně.")
+            break
+        cleaner()
+        loading(9)
+        cleaner()
+
+def loading(wait):
+    for i in range(wait):
+        print(".", end="")
+        time.sleep(0.2)
+        print("..", end=".")
+    print()
+    
+    
+      
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 cleaner()
 #+++++++++++++++
@@ -204,3 +224,5 @@ test, test1, test2 = content_of_questions(path)
 # print(test2[0][0][0])
 
 game(test2)
+
+    
