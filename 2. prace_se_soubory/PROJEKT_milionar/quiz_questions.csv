@@ -1,4 +1,4 @@
-type,difficulty,category,question,correct_answer
+type,difficulty,category,,correct_answer
 boolean,easy,General Knowledge,The Great Wall of China is visible from the moon.,False
 boolean,easy,General Knowledge,Jingle Bells was originally meant for Thanksgiving,True
 boolean,easy,General Knowledge,Nutella is produced by the German company Ferrero.,False
@@ -80,7 +80,7 @@ boolean,medium,Entertainment: Film,There arent any live-action clones in Star Wa
 boolean,easy,Entertainment: Film,"In the movie The Revenant, DiCaprios character hunts down the killer of his son.",True
 boolean,easy,Entertainment: Film,The movie The Nightmare before Christmas was all done with physical objects.,True
 boolean,hard,Entertainment: Music,The song Mystery Train was released by artist Little Juniors Blue Flames in 1953.,True
-boolean,easy,Entertainment: Music,"In 1993, Prince changed his name to an unpronounceable symbol because he was unhappy with his contract with Warner Bros.",True
+boolean,easy,Entertainment: Music,,True
 boolean,easy,Entertainment: Music,American rapper Dr. Dre actually has a Ph.D. doctorate.,False
 boolean,medium,Entertainment: Music,"3 members of 2 Live Crew were arrested for playing songs from their album, As Nasty As They Wanna Be, live.",True
 boolean,medium,Entertainment: Music,EDM label Monstercat signs tracks instead of artists.,True
@@ -242,7 +242,7 @@ boolean,easy,Geography,There is a city called Rome in every continent on Earth.,
 boolean,hard,History,The fourth funnel of the RMS Titanic was fake designed to make the ship look more powerful and symmetrical.,True
 boolean,medium,History,"Sargon II, a king of the Neo-Assyrian Empire, was a direct descendant of Sargon of Akkad.",False
 boolean,easy,History,Former United States Presidents John Adams and Thomas Jefferson died within hours of each other.,True
-boolean,hard,History,Japan was part of the Allied Powers during World War I.,True
+boolean,hard,History,,True
 boolean,easy,History,"In World War ll, Great Britian used inflatable tanks on the ports of Great Britain to divert Hitler away from Normandy/D-day landing.",True
 boolean,easy,History,Thomas Crapper was a plumber who invented the flushing toilet.,False
 boolean,medium,History,"Abraham Lincoln was the first U.S. President to be born outside the borders of the thirteen original states. ",True

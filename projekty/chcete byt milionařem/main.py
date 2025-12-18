@@ -71,7 +71,6 @@ def first_menu(path):
         else:
             print("[register, ne, no] / [login, ano, yes]")
             user_name = "idiot"
-            time.sleep(4)
             
         if not(login_successful):
             cleaner()
@@ -89,6 +88,7 @@ def first_menu(path):
 # ----------------------    
 def lobby(path, user_name):
     question_diff_counts, question_category_count, questions = content_of_questions(path)
+    path_to_winners = path + "winners.txt"
     cleaner()
     while(1):
         while(1):
@@ -98,32 +98,35 @@ def lobby(path, user_name):
             print("3. Vypsat minulé výtěze. [v]")
             print("4. Pravidla a průběh hry. [p]")
             print("5. Odejít / Odhlásit se.[o]")
-            choice = str(input("\n>"))
-            if choice in ("h", "s", "v", "p", "o"):
+            choice = (input("\n>"))
+            if choice in ("h", "s", "v", "p", "o", "1", "2", "3", "4", "5"):
                 break
             
         match(choice):
-            case("h"):
-                path += "winners.txt"
+            case("h" | "1"):
                 winning = game(questions)
                 if winning:
                     print("Výhrál jsi gratulace!")
-                    with open(path,"a", encoding="utf-8") as file:
-                        file.write(f"user_name\n")
+                    print("Budete zapsání do databáze vítězů.")
+                    loading(25)
+                    with open(path_to_winners,"a", encoding="utf-8") as file:
+                        file.write(f"{user_name}\n")
                 else:
                     print("Dnes se to nějak nepovedlo. Děkuji za účast!")
+                cleaner()
                     
-            case("s"):
+            case("s" | "2"):
                 graph_menu(question_diff_counts, question_category_count)
+                cleaner()
                 
-            case("v"):
-                path += "winners.txt"
-                with open(path,"r", encoding="utf-8") as file:
+            case("v" | "3"):
+                with open(path_to_winners,"r", encoding="utf-8") as file:
                     lines = file.read()
-                    print("Seznam výtězů:\n")
-                    for line in lines:
-                        print(line)
-            case("p"):
+                    print("Seznam výtězů:")
+                    print(lines)
+                time.sleep(5)
+                    
+            case("p" | "4"):
                 print("Pravidla hry")
                 print("-----------------------------------------")
                 print("Hra má vždy 15 úrovní (otázek). Obtížnosti jsou pevně dané:")
@@ -138,45 +141,24 @@ def lobby(path, user_name):
                 print("• nebo pokud správně zodpoví všechny 15 otázek. V tomto případě je uživatelům")
                 print("login (s možnou zprávou) uložen do souboru všech vítězů.")
                 print("-----------------------------------------")
-                time.sleep(10)
+                time.sleep(8)
             
-            case("o"):
+            case("o" | "5"):
                 break
+      
+    print("Bylo nám potěšením. <3")
+        
 # grafy
 # ----------------------
 def graph_menu(question_diff_counts, question_category_count):
-    graff_type = input("Jaký graf chcete? (stačí první písmenko)\nGraf obtížnosti [difficulty] \nGraf kategorií [category]\n>")
-    match(graff_type[0]):
+    graff_type = ""
+    while(not(graff_type in ("d", "c"))):
+        graff_type = input("Jaký graf chcete? (jenom první písmenko)\nGraf obtížnosti [d] \nGraf kategorií [c]\n>")
+    match(graff_type):
         case("d"): # difficulty
             graph(question_diff_counts)
         case("c"): # category
             graph(question_category_count)
-
-      
-def content_of_questions(path):
-    path += "quiz_questions.csv"
-    question_diff_raw = Counter() #vím, že už to můžu počítat přes pole s otázkama, jen se mi tento způsob líbí, tak ho tady nechávám :D
-    question_category_raw = Counter()
-    questions = [[], [], []] # první easy, druhá medium, třetí hard
-    
-    with open(path, "r", encoding="utf-8") as file:
-        lines = csv.DictReader(file)
-        
-        for line in lines:
-            if line["difficulty"] == "easy":
-                questions[0].append((line["question"], line["correct_answer"]))
-            elif line["difficulty"] == "medium":
-                questions[1].append((line["question"], line["correct_answer"]))
-            elif line["difficulty"] == "hard":
-                questions[2].append((line["question"], line["correct_answer"]))
-                
-            question_diff_raw[line["difficulty"]] += 1
-            question_category_raw[line["category"]] += 1
-        
-    question_diff_counts = list(question_diff_raw.items()) 
-    question_category_count = list(question_category_raw.items())
-
-    return question_diff_counts, question_category_count, questions
            
        
 def graph(question_counts):     
@@ -199,32 +181,32 @@ def game(questions):
     winning = True
     
     cleaner()
-    for i in range(0, 2):
+    for i in range(0, 5):
         if i % 5 == 0 and i != 0: # každých  lvl se mění obtížnost
             level += 1
             print("Úroveň se zvyšuje!")
             loading(15)
-        question_number = r.randint(0,len(questions[level]))
+        question_number = r.randint(0,len(questions[level])-1)
     
     #forntend
         print(f"{i+1}. otázka.")
         print(f"Úroveň složitosti: {level_names[level]}")
         
         while(True): # cyklus jestli uživatel zadává správné vstupy
-            print(questions[level][question_number][0], questions[level][question_number][1])
-            answer = input("[True / False] [Pravda / Nepravda]\n>")
+            print(questions[level][question_number][0]) # questions[level][question_number][1])
+            answer = input("[True / False]\n>")
             # kontroluji jen první písmenka kvůli upsání
             if answer:
-                if answer[0].lower() in ("t", "p"):
-                    answer = True
+                if answer[0].lower() in ("t"):
+                    True_False = True
                     break
-                elif answer[0].lower() in ("f", "n"):
-                    answer = False
+                elif answer[0].lower() in ("f"):
+                    True_False = False
                     break
                 else:
                     continue
-    
-        if answer is not questions[level][question_number][1]: 
+                
+        if True_False is not questions[level][question_number][1]:
             print("Někde se někdo asi uklikl protože ty chyby neděláš!")
             loading(5)
             print("Ještě to zkontroluji.")
@@ -234,29 +216,66 @@ def game(questions):
             loading(20)
             winning = False
             break
-        
         cleaner()
-        loading(1)
+        loading(8)
         cleaner()
+        True_False = "" # radši to resetuji
+        answer = "" # radši to resetuji
         
     return winning
-        
-    
+         
 
-def loading(wait):
-    for i in range(wait):
+def loading(wait_time): # ha a prej že python je rychlej xDDDD
+    print("loading ....", end="")
+    for i in range(wait_time):
         print(".", end="")
-        time.sleep(0.2 * wait/9)
-        print("..", end=".")
+        time.sleep(0.2 / wait_time * abs(i-10))
+        print("...", end=".")
+        time.sleep(0.1 / wait_time * abs(i-10))
     print()
     
     
+def content_of_questions(path):
+    path += "quiz_questions.csv"
+    question_diff_raw = Counter() #vím, že už to můžu počítat přes pole s otázkama, jen se mi tento způsob líbí, tak ho tady nechávám :D
+    question_category_raw = Counter()
+    questions = [[], [], []] # první easy, druhá medium, třetí hard
+    
+    with open(path, "r", encoding="utf-8") as file:
+        lines = csv.DictReader(file)
+        
+        for line in lines:
+            if line["difficulty"] == "easy":
+                questions[0].append((line["question"], string_boolen(line["correct_answer"])))
+            elif line["difficulty"] == "medium":
+                questions[1].append((line["question"], string_boolen(line["correct_answer"])))
+            elif line["difficulty"] == "hard":
+                questions[2].append((line["question"], string_boolen(line["correct_answer"])))
+                
+            question_diff_raw[line["difficulty"]] += 1
+            question_category_raw[line["category"]] += 1
+        
+    question_diff_counts = list(question_diff_raw.items()) 
+    question_category_count = list(question_category_raw.items())
+
+    return question_diff_counts, question_category_count, questions      
       
+
+def string_boolen(string): 
+    string = string.strip().lower()
+    if string  == 'true':
+        return True
+    elif string == 'false':
+        return False
+    else:
+        return None
+    
+    
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 cleaner()
 #+++++++++++++++
-# first_menu(path)    
-lobby(path, "teo")
+first_menu(path)     
+# lobby(path, "admin")
 #+++++++++++++
 
 
@@ -264,11 +283,6 @@ lobby(path, "teo")
 # graph_menu(path)
 
 # test, test1, test2 = content_of_questions(path)
-
-# print(test)
-# print(test1)
-# print(test2[0][0][0])
-
 # game(test2)
 
 # answer = ""
@@ -281,3 +295,25 @@ lobby(path, "teo")
 #             answer = True
 #         elif answer[0].lower() in ("f", "n"):
 #             answer = False
+
+
+
+
+# # Zobrazí hodnotu
+# for i in range(len(test2)):
+#     for j in range(len(test2[i])):
+#         for k in range(len(test2[i][j])):
+#             print(type(test2[0][j][1])) 
+#             print(test2[0][j][1])
+            
+# print(string_boolen("                True                  "))
+            # Zobrazí typ hodnoty
+
+# print(bool(test2[0][0][1]))          # Zobrazí, zda je hodnota považována za True nebo False
+# print(test2[0][0][1])
+# print(True == test2[0][0][1])
+# print(False == test2[0][0][1])
+# print(test2[0][0][1]) 
+# print(True == test2[0][0][1])
+# print(False == test2[0][0][1])
+# print(True is not True)
