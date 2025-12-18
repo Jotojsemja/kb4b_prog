@@ -270,15 +270,13 @@ def string_boolen(string):
     else:
         return None
     
-    
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 cleaner()
 #+++++++++++++++
 first_menu(path)     
-# lobby(path, "admin")
 #+++++++++++++
 
-
+# lobby(path, "admin")
 #+++++++++++++++++
 # graph_menu(path)
 
