@@ -181,7 +181,7 @@ def game(questions):
     winning = True
     
     cleaner()
-    for i in range(0, 5):
+    for i in range(0, 15):
         if i % 5 == 0 and i != 0: # každých  lvl se mění obtížnost
             level += 1
             print("Úroveň se zvyšuje!")
